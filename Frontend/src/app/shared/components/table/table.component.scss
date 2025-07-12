@@ -1,0 +1,75 @@
+.header-table{
+  font-weight: normal;
+  font-size: 1rem;
+  font-family: 'Helvetica Neue', serif;
+}
+
+.row-table{
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+.table-title{
+  font-size: 1.6rem;
+  padding-left: 1.5rem;
+}
+
+.table-header{
+  display: flex;
+  justify-content: space-between;
+  padding: 0.6em 0;
+}
+
+.recherche {
+  font-size: 0.8rem;
+  padding : 0.3rem;
+}
+
+.edit-button {
+  width: 2rem;
+}
+
+th,td {
+  padding: 0.6rem;
+}
+
+.p-multiselect{
+  min-width: 10.6rem;
+  border-color: dimgray;
+  color: dimgrey;
+  font-weight: bold;
+}
+
+.p-multiselect-label {
+  font-size: 0.9rem;
+  padding: 0.6rem;
+}
+
+.p-datatable-header {
+  padding: 0.6rem;
+}
+
+.pi-pencil {
+  font-size: 0.6rem;
+}
+
+.p-sortable-column-icon {
+  width: 0.7rem;
+  height: 0.7rem;
+}
+
+.p-paginator .p-paginator-current {
+  font-size: 0.9rem;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page {
+  font-size: 0.9rem;
+}
+
+.edit-button {
+  margin-right: 0.6rem;
+}
+
+.add-button {
+  margin-left: 1.2rem;
+}

@@ -1,0 +1,183 @@
+<div class="grid">
+  <div class="col-12 lg:col-6 xl:col-3">
+    <div class="card mb-0">
+      <div class="flex justify-content-between mb-3">
+        <div>
+          <span class="block text-500 font-medium mb-3">Commandes</span>
+          <div class="text-900 font-medium text-xl">{{ newOrdersCount }}</div>
+        </div>
+        <div
+          class="flex align-items-center justify-content-center bg-blue-100 border-round"
+          [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+        >
+          <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 lg:col-6 xl:col-3">
+    <div class="card mb-0">
+      <div class="flex justify-content-between mb-3">
+        <div>
+          <span class="block text-500 font-medium mb-3">Revenue</span>
+          <div class="text-900 font-medium text-xl">{{ totalRevenue }} TND</div>
+        </div>
+        <div
+          class="flex align-items-center justify-content-center bg-orange-100 border-round"
+          [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+        >
+          <i class="pi pi-map-marker text-orange-500 text-xl"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 lg:col-6 xl:col-3">
+    <div class="card mb-0">
+      <div class="flex justify-content-between mb-3">
+        <div>
+          <span class="block text-500 font-medium mb-3"
+            >Client et fournisseurs
+          </span>
+          <div class="text-900 font-medium text-xl">
+            {{ (totalClients ?? 0) + (totalFournisseurs ?? 0) }}
+          </div>
+        </div>
+        <div
+          class="flex align-items-center justify-content-center bg-cyan-100 border-round"
+          [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+        >
+          <i class="pi pi-users text-cyan-500 text-xl"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="p-grid" style="display: flex; flex-wrap: wrap">
+    <div class="p-col-12 p-md-6" style="display: flex; justify-content: center">
+      <div class="card">
+        <p-header>Total Clients et Fournisseurs</p-header>
+        <div class="p-d-flex p-jc-between">
+          <p-chart
+            type="pie"
+            [data]="clientSupplierChartData"
+            [options]="chartOptions"
+          ></p-chart>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Fournisseurs with a bar chart -->
+    <div class="p-col-12 p-md-6" style="display: flex; justify-content: center">
+      <div class="card">
+        <p-header>Commandes</p-header>
+
+        <div class="p-d-flex p-jc-between">
+          <p-chart
+            type="bar"
+            [data]="orderStatusChartData"
+            [options]="chartOptions"
+          ></p-chart>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-6" style="display: flex; justify-content: center">
+      <div class="grid">
+        <div class="col-12">
+          <div class="card mb-0">
+            <div class="flex justify-content-between mb-3">
+              <div>
+                <span class="block text-500 font-medium mb-3"
+                  >Stock faible</span
+                >
+                <div class="text-900 font-medium text-xl">
+                  {{ lowStockCount }} Produits
+                </div>
+              </div>
+              <div
+                class="flex align-items-center justify-content-center bg-blue-100 border-round"
+                [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+              >
+                <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="card mb-0">
+            <div class="flex justify-content-between mb-3">
+              <div>
+                <span class="block text-500 font-medium mb-3">Commandes en attente</span>
+                <div class="text-900 font-medium text-xl">
+                  {{ pendingOrdersCount }}
+                </div>
+              </div>
+              <div
+                class="flex align-items-center justify-content-center bg-orange-100 border-round"
+                [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+              >
+                <i class="pi pi-clock text-orange-500 text-xl"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-col-12 p-md-4">
+    <div class="card">
+      <p-progressBar
+        [value]="monthlyRevenueGrowth"
+        [showValue]="true"
+      ></p-progressBar>
+    </div>
+  </div>
+</div>
+
+<!-- Statistiques des Produits et Meilleures Ventes -->
+<div class="card">
+  <div class="p-grid" style="display: flex; flex-wrap: wrap">
+    <div class="p-col-12 p-md-6" style="display: flex; justify-content: center">
+      <div class="card">
+        <p-header>Statistiques des Produits</p-header>
+        <div class="p-d-flex p-jc-between">
+          <canvas id="productStatsChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="p-col-12 p-md-6" style="display: flex; justify-content: center">
+      <div class="card">
+        <p-header>Meilleures Ventes</p-header>
+        <div class="p-d-flex p-jc-between">
+          <canvas id="topSellingChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tableau des Commandes Récentes -->
+<p-card class="dashboard-card">
+  <p-header>Commandes Récentes</p-header>
+  <p-table [value]="recentOrders">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Référence de Commande</th>
+        <th>Client</th>
+        <th>Statut</th>
+        <th>Date</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-order>
+      <tr>
+        <td>{{ order.referenceCommande }}</td>
+        <td>{{ order.personne?.prenom }} {{ order.personne?.nom }}</td>
+        <td>{{ translateStatus(order.statutCommande) }}</td>
+        <td>{{ order.dateCommande | date : "short" }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

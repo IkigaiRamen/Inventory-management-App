@@ -1,0 +1,115 @@
+/* You can add global styles to this file, and also import other style files */
+@import "assets/layout/styles/layout/layout.scss";
+/* PrimeNG */
+@import "../node_modules/primeng/resources/primeng.min.css";
+@import "../node_modules/primeflex/primeflex.scss";
+@import "../node_modules/primeicons/primeicons.css";
+
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.product-image {
+    width: 280px;
+    height: 200px; /* Set desired fixed height */
+    object-fit: cover; /* Ensures image maintains aspect ratio */
+    border-radius: 0.5rem; /* Optional: rounds the corners */
+  }
+
+.button-group {
+    display: flex;
+
+    button {
+        margin-right: 30px;
+        transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+
+        &.achat {
+            background-color: #28a745; /* Green for buy */
+            color: white;
+
+            &:hover {
+                background-color: #218838; /* Darker green for hover */
+            }
+
+            &.selected {
+                background-color: #1e7e34; /* Darker green for selected */
+                border: 2px solid #155724; /* Darker border for emphasis */
+            }
+        }
+
+        &.vente {
+            background-color: #dc3545; /* Red for sell */
+            color: white;
+
+            &:hover {
+                background-color: #c82333; /* Darker red for hover */
+            }
+
+            &.selected {
+                background-color: #bd2130; /* Darker red for selected */
+                border: 2px solid #721c24; /* Darker border for emphasis */
+            }
+        }
+
+        &.location {
+            background-color: #007bff; /* Blue for rent */
+            color: white;
+
+            &:hover {
+                background-color: #0069d9; /* Darker blue for hover */
+            }
+
+            &.selected {
+                background-color: #0056b3; /* Darker blue for selected */
+                border: 2px solid #004085; /* Darker border for emphasis */
+            }
+        }
+    }
+}
+
+.block-header {
+    padding: 1rem 2rem;
+    background-color: var(--surface-section);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border: 1px solid var(--surface-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.block-section {
+    margin-bottom: 4rem;
+  }
+
+  .block-content {
+    padding: 0;
+    border: 1px solid var(--surface-border);
+    border-top: 0 none;
+  }
+  .surface-section {
+    background-color: var(--surface-section) !important;
+  }
+  .progress-bar-start .p-progressbar-value {
+    background-color: #f0ad4e !important; // Orange color for START
+  }
+  
+  .progress-bar-in-progress .p-progressbar-value {
+    background-color: #5bc0de !important; // Light blue color for IN_PROGRESS
+  }
+  
+  .progress-bar-validated .p-progressbar-value {
+    background-color: #5cb85c !important; // Green color for VALIDATED
+  }
+  
+  .progress-bar-completed .p-progressbar-value {
+    background-color: #0275d8 !important; // Blue color for COMPLETED
+  }
+  .progress-bar-cancelled .p-progressbar-value{
+    background-color: #e63933 !important;
+  }
+  

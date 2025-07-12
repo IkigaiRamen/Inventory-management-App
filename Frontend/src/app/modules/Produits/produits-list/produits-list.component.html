@@ -1,0 +1,66 @@
+<p-toast></p-toast>
+<div class="card">
+  <div class="text-900 font-medium text-4xl mb-4">Produits</div>
+
+  <!-- Search bar -->
+  <div class="p-inputgroup mb-4">
+    <input type="text" pInputText [(ngModel)]="searchQuery" placeholder="Search..." 
+           (keyup)="onSearch()" />
+    <button pButton icon="pi pi-search" class="p-button-outlined" (click)="onSearch()"></button>
+  </div>
+  <div *ngIf="loading" class="flex justify-content-center">
+    <p-progressSpinner styleClass="p-mt-4" [style]="{'width': '50px', 'height': '50px'}"></p-progressSpinner>
+  </div>
+  <!-- Product List -->
+  <div class="grid -mt-3 -ml-3 -mr-3">
+    <div class="col-12 md:col-6 lg:col-4" *ngFor="let produit of produits">
+      <div class="p-2">
+        <div class="card m-3 border-1 surface-border">
+          <div class="flex flex-wrap gap-2 align-items-center justify-content-between mb-2">
+            <div class="flex align-items-center">
+              <i class="pi pi-tag mr-2"></i> 
+              <span class="product-badge status-instock">{{ produit.categorieLibelle }}</span>
+            </div>
+            <div
+              class="stock-badge text-white font-bold text-sm px-3 py-2"
+              [ngStyle]="{
+                'background': getBackgroundColor(produit.quantiteDisponible, produit.quantiteTotale),
+                'border-radius': '1rem',
+                'margin-top': '1rem'
+              }"
+            >
+              {{ produit.quantiteDisponible }} Reste!
+            </div>
+          </div>
+
+          <div class="flex flex-column align-items-center text-center mb-3">
+            <img 
+              class="product-image w-9 shadow-2 my-3 mx-0" 
+              [src]="produit.imageurl" 
+              alt="Product Image" 
+              style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px;"
+            >
+            <div class="text-2xl font-bold">{{ produit.libelle }}</div>
+            <div class="mb-3">
+              {{ produit.description }}
+            </div>
+          </div>
+          
+          <div class="flex align-items-center justify-content-between mb-2">
+            <span class="text-2xl font-semibold">
+              {{ produit.prix | number: '1.0-0' }} TND
+            </span>
+            <button 
+              pButton 
+              icon="pi pi-shopping-cart" 
+              class="p-button-rounded p-button-help p-button-icon-only" 
+              (click)="addToCart(produit)"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> 
+
+  <p-paginator [rows]="size" [totalRecords]="totalRecords" [rowsPerPageOptions]="[5, 10, 20]" 
+    (onPageChange)="onPageChange($event)"></p-paginator>
+</div>

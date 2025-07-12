@@ -1,0 +1,109 @@
+<p-table [tableStyle]="{ 'min-width': '50rem'}"
+         [value]="rows"
+         [paginator]='paginator'
+         [rows]='resultPerPage'
+         [first]="first"
+         [showCurrentPageReport]="true"
+         currentPageReportTemplate="{first} - {last} sur {totalRecords}"
+         [globalFilterFields]="['referenceInterne', 'libelle', 'statut', 'numeroAffaireRacing', 'coutUnitaire', 'longueur']"
+         [columns]="selectedColumns">
+    <ng-template pTemplate="caption">
+        <div class="table-header">
+            <div class="tab-title">
+                <span class="table-title">{{ title }}</span>
+                <button type="button"
+                        class="p-button p-button-success add-button"
+                        pButton
+                        icon="pi pi-plus"
+                        [label]="'Ajouter ' + title"
+                        (click)="confirmAdd()">
+                </button>
+            </div>
+            <p-multiSelect class="table-filter"
+                           [options]="colonnes"
+                           [(ngModel)]="selectedColumns"
+                           (ngModelChange)='modelChange($event)'
+                           optionLabel="label"
+                           selectedItemsLabel="{0}/{{ colonnes.length }} colonnes affichées"
+                           [maxSelectedLabels]="0"
+                           placeholder="Aucune colonne affichée"
+                           dropdownIcon="pi pi-caret-down">
+            </p-multiSelect>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th scope='col' *ngIf="isEditable || isDeletable"></th>
+            <th
+                    scope='col'
+                    class="header-table" [pSortableColumn]="col.filterable ? col.key : null" *ngFor="let col of columns">
+                {{ col.label }}
+                <p-sortIcon *ngIf="col.filterable" class="icon" [field]="col"></p-sortIcon>
+            </th>
+        </tr>
+        <tr>
+            <th scope='col' *ngIf="isEditable || isDeletable"></th>
+            <th *ngFor="let col of columns">
+                <p-columnFilter
+                        [field]='col.key'
+                        matchMode="contains"
+                        [showMenu]='false'
+                        [showClearButton]="false">
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                        <input type='text'
+                               pInputText
+                               [ngModel]='value'
+                               (ngModelChange)='filter($event)'
+                               placeholder='Recherche'
+                               class='p-inputtext recherche'>
+                    </ng-template>
+                </p-columnFilter>
+            </th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr>
+            <td *ngIf="isEditable || isDeletable">
+                <button *ngIf="isEditable"
+                        class="edit-button"
+                        type="button"
+                        pButton
+                        pRipple
+                        icon="pi pi-pencil"
+                        (click)="confirmEdit(rowData)"
+                        style="margin-right: 0.5em;">
+                </button>
+
+                <button *ngIf="isDeletable"
+                        class="delete-button p-button-danger"
+                        type="button"
+                        pButton
+                        pRipple
+                        icon="pi pi-trash"
+                        (click)="confirmDelete(rowData)"
+                        style="margin-right: 0.5em;">
+                </button>
+
+                <button *ngIf="isDeletable"
+                class="edit-button"
+                type="button"
+                pButton
+                pRipple
+                icon="pi pi-check"
+                (click)="select(rowData)"
+                style="margin-right: 0.5em;">
+        </button>
+            </td>
+
+            <td class="row-table" *ngFor="let col of columns">
+                {{ rowData[col.key] }}
+            </td>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate='paginatorleft'></ng-template>
+</p-table>
+
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>

@@ -1,0 +1,176 @@
+<p-toast></p-toast> <!-- Toast for success message -->
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+
+<div class="col-12">
+  <div class="card">
+    <div class="grid">
+      <div class="col-12 lg:col-2">
+        <div class="text-900 font-medium text-xl mb-3">Ajouter un Client ou un Fournisseur</div>
+        <p class="m-0 p-0 text-600 line-height-3 mr-3">
+          Vous pouvez ajouter un client ou un fournisseur ici pour gérer leurs informations et interactions.
+        </p>
+      </div>
+
+      <div class="col-12 lg:col-10">
+        <div class="grid formgrid p-fluid">
+          <!-- Radio Buttons for selecting type -->
+          <div class="field col-12 md:col-6">
+            <label>Type de personne</label>
+            <div class="flex justify-content-between">
+              <p-radioButton
+                name="personType"
+                value="C"
+                [(ngModel)]="selectedType"
+                label="Client"
+              ></p-radioButton>
+              <p-radioButton
+                name="personType"
+                value="F"
+                [(ngModel)]="selectedType"
+                label="Fournisseur"
+              ></p-radioButton>
+            </div>
+          </div>
+
+          <!-- Nom and Prenom fields -->
+          <div class="field col-12 md:col-6">
+            <label htmlFor="nom">Nom</label>
+            <input
+              pInputText
+              id="nom"
+              [(ngModel)]="nom"
+              type="text"
+              [ngClass]="{
+                'ng-invalid ng-dirty': submitted
+              }"
+            />
+          </div>
+          <div class="field col-12 md:col-6">
+            <label htmlFor="prenom">Prenom</label>
+            <input
+              pInputText
+              id="prenom"
+              [(ngModel)]="prenom"
+              type="text"
+              [ngClass]="{
+                'ng-invalid ng-dirty': submitted
+              }"
+            />
+          </div>
+
+          <!-- Client-specific fields -->
+          <div class="field col-12 md:col-6" *ngIf="selectedType === 'C'">
+            <label htmlFor="numero">Numero</label>
+            <input
+              pInputText
+              id="numero"
+              [(ngModel)]="numero"
+              type="text"
+              required
+              (input)="validateNumero($event)"
+              [ngClass]="{
+                'ng-invalid ng-dirty': submitted
+              }"
+            />
+            <small *ngIf="submitted && !numero" class="p-error">Le numéro est requis.</small>
+            <small *ngIf="submitted && isInvalidNumero" class="p-error">Le numéro doit être un nombre valide.</small>
+          </div>
+
+          <div class="field col-12 md:col-6" *ngIf="selectedType === 'C'">
+            <label htmlFor="cinRecto">Image Recto CIN</label>
+            <input
+              pInputText
+              id="cinRecto"
+              type="file"
+              (change)="onFileSelected($event)"
+            />
+          </div>
+          <div class="field col-12 md:col-6" *ngIf="selectedType === 'C'">
+            <label htmlFor="cinVerso">Image Verso CIN</label>
+            <input
+              pInputText
+              id="cinVerso"
+              type="file"
+              (change)="onFileSelected2($event)"
+            />
+          </div>
+
+          <div class="field col-12 md:col-6" *ngIf="selectedType === 'C'">
+            <label htmlFor="numeroCin">Numero CIN</label>
+            <input
+              pInputText
+              id="numeroCin"
+              [(ngModel)]="numeroCin"
+              type="text"
+              required
+              (input)="validateNumeroCin($event)"
+              [ngClass]="{
+                'ng-invalid ng-dirty': submitted
+              }"
+            />
+            <small *ngIf="submitted && !numeroCin" class="p-error">Le numéro est requis.</small>
+            <small *ngIf="submitted && isInvalidNumeroCin" class="p-error">Le numéro doit être un nombre valide.</small>
+          </div>
+
+          <!-- Fournisseur-specific fields -->
+          <div class="field col-12 md:col-6" *ngIf="selectedType === 'F'">
+            <label htmlFor="numero">Numero</label>
+            <input
+              pInputText
+              id="numeroFournisseur"
+              [(ngModel)]="numero"
+              type="text"
+              required
+              (input)="validateNumero($event)"
+              [ngClass]="{
+                'ng-invalid ng-dirty': submitted
+              }"
+            />
+            <small *ngIf="submitted && !numero" class="p-error">Le numéro est requis.</small>
+            <small *ngIf="submitted && isInvalidNumero" class="p-error">Le numéro doit être un nombre valide.</small>
+          </div>
+
+          <div class="field col-12 md:col-6" *ngIf="selectedType === 'F'">
+            <label htmlFor="societe">Société</label>
+            <input
+              pInputText
+              id="societe"
+              [(ngModel)]="societe"
+              type="text"
+              [ngClass]="{
+                'ng-invalid ng-dirty': submitted
+              }"
+            />
+          </div>
+
+          <div class="field col-12 md:col-6" *ngIf="selectedType === 'F'">
+            <label htmlFor="siren">SIREN</label>
+            <input
+              pInputText
+              id="siren"
+              [(ngModel)]="siren"
+              type="text"
+              [ngClass]="{
+                'ng-invalid ng-dirty': submitted
+              }"
+            />
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="flex justify-content-end">
+        <button
+          type="button"
+          class="p-element p-ripple w-auto mt-3 p-button p-component"
+          pButton
+          label="Ajouter"
+          icon="pi pi-users"
+          (click)="addPersonne()"
+        ></button>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>

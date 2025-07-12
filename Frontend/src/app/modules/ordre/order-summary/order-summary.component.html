@@ -1,0 +1,99 @@
+<div class="order-details-card" *ngIf="commande">
+  <div class="header">
+    <div class="header-left">
+      <h2>Merci pour votre commande !</h2>
+    </div>
+    <div class="header-right">
+      <div class="order-info">
+        <div class="info-block">
+          <span class="label">REF de la commande</span>
+          <span class="value">{{ commande.referenceCommande }}</span>
+        </div>
+        <div class="info-block">
+          <span class="label">Date de la commande</span>
+          <span class="value">{{ commande.dateCommande | date: 'longDate' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-section">
+    <h3>Commande en cours de traitement</h3>
+    <p-progressBar [value]="progressBarValue" [ngClass]="progressBarClass" [showValue]="true">
+      <div class="p-progressbar-label">
+      {{ progressBarLabel }}
+    </div></p-progressBar>
+    <div class="status-bar">
+      <span [ngClass]="{'active-status': statusClass['START']}">Commandé</span>
+      <span [ngClass]="{'active-status': statusClass['IN_PROGRESS']}">En traitement</span>
+      <span [ngClass]="{'active-status': statusClass['VALIDATED']}">Validé</span>
+      <span [ngClass]="{'active-status': statusClass['COMPLETED']}">Livré</span>
+      
+    </div>
+  </div>
+
+  <div class="products-section">
+    <h3>Produits Commandés:</h3>
+    <ul class="product-list">
+      <li class="product-item" *ngFor="let detail of commande.detailsCommande">
+        <img [src]="detail.produitImageUrl" class="product-image" />
+        <div class="product-details">
+          <span class="product-name">{{ detail.produitLibelle }}</span>
+          <div class="product-info">
+            <span class="quantity">Quantité: {{ detail.quantite }}</span>
+            <span class="unit-price">Prix Unitaire: {{ detail.prixUni | currency : 'TND' }}</span>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="summary-section">
+    <div class="price-info">
+      <div class="info-block1">
+        <span class="label">Prix Total HT :</span>
+        <span class="value">{{ commande.prixCommandeHT | currency : 'TND' }}</span>
+      </div>
+      <div class="info-block1">
+        <span class="label">Prix Total :</span>
+        <span class="value">{{ commande.prixCommande | currency : 'TND' }}</span>
+      </div>
+    </div>
+
+    <!-- Payment section -->
+    <!-- Payment section -->
+<!-- Payment section -->
+<div class="flex flex-column sm:mr-5 mb-5">
+  <span class="font-medium text-900 text-xl">Paiement</span>
+
+  <div *ngIf="commande.facture" class="flex align-items-center mt-3">
+    <!-- If facture is not null, show facture details -->
+    <div class="flex flex-column">
+      <span class="text-900 font-medium">{{ getStatutPaiementTranslation(commande.facture.statutPaiement) }}</span>
+
+      <span class="text-900 font-medium">{{ getModePaiementTranslation(commande.facture.modePaiement) }}</span>
+    </div>
+  </div>
+</div>
+
+
+
+     <!-- Buttons under payment section -->
+     <div class="flex mt-3">
+      <!-- Show Factures button if facture is not null -->
+      <button *ngIf="commande.facture" pButton pRipple routerLink="/facture/{{ commande.commandeId }}" class="p-button-rounded p-button-success mr-2">
+        <span class="p-button-label">Factures</span>
+      </button>
+      
+      <!-- Show Devis button if facture is null, and Devis is also null -->
+      <button *ngIf="!commande.facture && !commande.devis" pButton pRipple routerLink="/devis/{{ commande.commandeId }}" class="p-button-rounded p-button-info">
+        <span class="p-button-label">Devis</span>
+      </button>
+
+      <!-- Show Commande button if devis is not null -->
+      <button *ngIf="commande.devis" pButton pRipple routerLink="/commande/{{ commande.commandeId }}" class="p-element p-ripple w-auto mt-3 p-button p-component">
+        <span class="p-button-label">Commande</span>
+      </button>
+    </div>
+  </div>
+</div>

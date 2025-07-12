@@ -1,0 +1,26 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: 'update'
+  application:
+    name: stokkia
+  flyway:
+    locations: classpath:/db/migrations
+    schemas: employees
+    baselineOnMigrate: true
+    enabled: true
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/stokkia
+    username: postgres
+    password: admin
+  sql:
+    init:
+      mode: always
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 2MB
+      max-request-size: 2MB
+
+

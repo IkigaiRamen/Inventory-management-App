@@ -1,0 +1,95 @@
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+  }
+  .futuristic-footer {
+    display: flex;
+    background: #20232a;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .futuristic-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  .futuristic-icon {
+    margin-right: 0.5rem;
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+  }
+  
+  /* Button-specific styles */
+  .cancel-order {
+    background: #ff4d4f;
+  }
+  
+  .cancel-order:hover {
+    background: #ff7875;
+  }
+  
+  .cancel-order .futuristic-icon {
+    color: #ffecec;
+  }
+  
+  .cancel-order:hover .futuristic-icon {
+    transform: scale(1.2) rotate(-15deg); /* Small shake effect */
+  }
+  
+  .process-order {
+    background: #1890ff;
+  }
+  
+  .process-order:hover {
+    background: #40a9ff;
+  }
+  
+  .process-order .futuristic-icon {
+    color: #e6f7ff;
+  }
+  
+  .process-order:hover .futuristic-icon {
+    transform: rotate(360deg); /* Rotate for processing effect */
+  }
+  
+  .validate-order {
+    background: #52c41a;
+  }
+  
+  .validate-order:hover {
+    background: #73d13d;
+  }
+  
+  .validate-order .futuristic-icon {
+    color: #f6ffed;
+  }
+  
+  .validate-order:hover .futuristic-icon {
+    transform: scale(1.2); /* Grow effect for validation */
+  }
+  
+  /* Add shadows and borders for depth */
+  .futuristic-button {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .futuristic-button.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+  
+  
+  

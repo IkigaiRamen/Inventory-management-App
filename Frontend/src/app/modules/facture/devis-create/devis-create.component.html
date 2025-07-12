@@ -1,0 +1,98 @@
+<p-toast></p-toast> <!-- Toast for success messages -->
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+
+<div class="col-12">
+  <div class="card">
+    <div class="grid">
+      <div class="col-12 lg:col-2">
+        <div class="text-900 font-medium text-xl mb-3">Gestion des Devis</div>
+        <p class="m-0 p-0 text-600 line-height-3 mr-3">
+          Gérez les devis, en ajoutant ou modifiant les informations des devis ici.
+        </p>
+      </div>
+
+      <div class="col-12 lg:col-10">
+        <div class="grid formgrid p-fluid">
+          
+          <!-- Devis Number -->
+          <div class="field col-12 md:col-6">
+            <label for="numeroDevis">Numéro de Devis</label>
+            <input
+              pInputText
+              id="numeroDevis"
+              [(ngModel)]="devis.numeroDevis"
+              type="text"
+            />
+          </div>
+
+          <!-- Description -->
+          <div class="field col-12 md:col-6">
+            <label for="description">Description</label>
+            <textarea
+              pInputTextarea
+              id="description"
+              [(ngModel)]="devis.description"
+              rows="3"
+            ></textarea>
+          </div>
+
+          <!-- Date Creation -->
+          <div class="field col-12 md:col-6">
+            <label for="dateCreation">Date de Création</label>
+            <p-calendar
+              id="dateCreation"
+              [(ngModel)]="devis.dateCreation"
+              dateFormat="dd/mm/yy"
+            ></p-calendar>
+          </div>
+
+          <!-- Date Expiration -->
+          <div class="field col-12 md:col-6">
+            <label for="dateExpiration">Date d'Expiration</label>
+            <p-calendar
+              id="dateExpiration"
+              [(ngModel)]="devis.dateExpiration"
+              dateFormat="dd/mm/yy"
+            ></p-calendar>
+          </div>
+
+          <!-- Total Amount -->
+          <div class="field col-12 md:col-6">
+            <label for="totalAmount">Montant Total</label>
+            <input
+              pInputText
+              id="totalAmount"
+              [(ngModel)]="devis.totalAmount"
+              type="number"
+            />
+          </div>
+
+          <!-- Tax Amount -->
+          <div class="field col-12 md:col-6">
+            <label for="taxAmount">Montant de la Taxe</label>
+            <input
+              pInputText
+              id="taxAmount"
+              [(ngModel)]="devis.taxAmount"
+              type="number"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Button to Submit or Add Devis -->
+      <div class="col-12">
+        <div class="flex justify-content-end">
+          <button
+            type="button"
+            class="p-element p-ripple w-auto mt-3 p-button p-component"
+            pButton
+            label="Enregistrer Devis"
+            icon="pi pi-save"
+            (click)="saveDevis()"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

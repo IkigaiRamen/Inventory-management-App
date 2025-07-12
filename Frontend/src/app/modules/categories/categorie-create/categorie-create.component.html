@@ -1,0 +1,59 @@
+<div class="col-12">
+  <p-toast></p-toast> <!-- Toast for success message -->
+  <div class="card">
+    <span class="text-900 text-xl font-bold mb-4 block">Ajouter Catégorie</span>
+    <div class="grid">
+      <div class="col-12 lg:col-2">
+        <div class="text-900 font-medium text-xl mb-3">Catégorie</div>
+        <p class="m-0 p-0 text-600 line-height-3 mr-3">
+          Odio euismod lacinia at quis risus sed vulputate odio.
+        </p>
+      </div>
+
+      <div class="col-12 lg:col-10">
+        <div class="grid formgrid p-fluid">
+          <!-- Libelle Input -->
+          <div class="field col-12 md:col-6">
+            <label for="libelle">Libellé</label>
+            <input
+              pInputText
+              id="libelle"
+              type="text"
+              [(ngModel)]="libelle"
+              placeholder="Entrer le nom de la catégorie"
+              [ngClass]="{'p-invalid': isLibelleInvalid()}"
+            />
+            <small *ngIf="isLibelleInvalid()" class="p-error">Le nom de la catégorie est requis.</small>
+          </div>
+
+          <!-- Description Input -->
+          <div class="field col-12 md:col-6">
+            <label for="description">Description</label>
+            <input
+              pInputText
+              id="description"
+              type="text"
+              [(ngModel)]="description"
+              placeholder="Entrer la description"             
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="col-12">
+        <div class="flex justify-content-end">
+          <button
+            type="button"
+            class="p-element p-ripple w-auto mt-3 p-button p-component"
+            (click)="createCategorie()"
+            pButton
+            label="Ajouter"
+            icon="pi pi-plus"
+            [disabled]="isLibelleInvalid() "
+          ></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

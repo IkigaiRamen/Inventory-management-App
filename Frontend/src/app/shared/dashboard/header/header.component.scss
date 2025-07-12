@@ -1,0 +1,58 @@
+// Define variables for reusability
+$header-bg-color: #5585b5;
+$header-font-color: white;
+$header-padding: 10px;
+$header-z-index: 100;
+$header-font-size: 24px;
+$time-font-size: 20px;
+$spacer-flex: 1 1 auto;
+
+// Mixin for flexbox centering
+@mixin flex-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo {
+  width: 60px;
+  height: 60px;
+  margin-right: 16px; // Space between logo and brand name
+}
+
+.brandname {
+  color: $header-font-color;
+  font-size: $header-font-size;
+  font-weight: bold;
+  position: absolute;
+  right: 10px; // Add weight for emphasis
+}
+// Main header styles
+.mainheader {
+  background: $header-bg-color;
+  position: sticky;
+  top: 0;
+  z-index: $header-z-index;
+  padding: $header-padding;
+  @include flex-center;
+
+  .mainheader__brandname {
+    color: $header-font-color;
+    padding-left: 1%;
+    font-size: $header-font-size;
+  }
+
+  .mainheader__time {
+    margin-right: 16px;
+    font-size: $time-font-size;
+    color: $header-font-color;
+
+    // Optional: Add hover effect
+    &:hover {
+      text-decoration: underline; // Example hover effect
+    }
+  }
+
+  .mainheader__spacer {
+    flex: $spacer-flex;
+  }
+}

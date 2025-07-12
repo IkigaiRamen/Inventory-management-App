@@ -1,0 +1,54 @@
+.grid-nogutter > .col, .grid-nogutter > [class*="col-"] {
+  padding: 0;
+}
+
+.grid > .col, .grid > [class*="col"] {
+  box-sizing: border-box;
+}
+
+.transition-duration-150 {
+  transition-duration: .15s !important;
+}
+
+.transition-colors {
+  transition-property: background-color, border-color, color !important;
+}
+
+.selected-purchase, .selected-sale, .selected-rental {
+  display: inline-block;
+  padding: 1rem 2rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.selected-purchase:hover, .selected-sale:hover, .selected-rental:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.selected-purchase:active, .selected-sale:active, .selected-rental:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.selected-purchase {
+  background: linear-gradient(135deg, #5ec7a6, #43a98e);
+  color: #fff;
+  border: none;
+}
+
+.selected-sale {
+  background: linear-gradient(135deg, #ff6f61, #e05545);
+  color: #fff;
+  border: none;
+}
+
+.selected-rental {
+  background: linear-gradient(135deg, #5daeff, #478de0);
+  color: #fff;
+  border: none;
+}

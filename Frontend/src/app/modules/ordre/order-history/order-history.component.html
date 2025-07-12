@@ -1,0 +1,148 @@
+<p-toast></p-toast>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+<div class="card">
+  <div class="flex flex-column md:flex-row justify-content-between align-items-center mb-4">
+    <div class="flex flex-column text-center md:text-left">
+      <span class="text-900 text-2xl mb-2">Mes Commandes</span>
+    </div>
+    <span class="p-input-icon-right mt-5 mb-2 md:mt-0 md:mb-0 w-full lg:w-25rem">
+      <i class="pi pi-search text-gray-400"></i>
+      <input type="text" [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Rechercher"
+        class="p-inputtext w-full lg:w-25rem surface-50" />
+    </span>
+  </div>
+
+  <div *ngFor="let commande of commandes" class="surface-card grid grid-nogutter border-round shadow-2 mb-6">
+    <!-- Order Header with Toggle Arrow and Action Buttons -->
+    <div class="col-12 flex p-2 surface-100 border-round-top justify-content-between align-items-center">
+      <i class="pi" [ngClass]="isExpanded(commande.commandeId) ? 'pi-chevron-down' : 'pi-chevron-right'"
+        style="cursor: pointer;" (click)="toggleDetails(commande.commandeId)"></i>
+      <div class="flex flex-column text-left">
+        <span class="text-700 block">REF de Commande</span>
+        <span class="text-900 font-medium block mt-2">{{ commande.referenceCommande }}</span>
+      </div>
+      <div class="flex flex-column text-left">
+        <span class="text-700 block">Date de Commande</span>
+        <span class="text-900 font-medium block mt-2">{{ commande.dateCommande|date: 'd MMM. y HH:mm' }}</span>
+      </div>
+      <div class="flex flex-column text-left">
+        <span class="text-700 block">Montant Total</span>
+        <span class="text-900 font-medium block mt-2">{{ commande.prixCommande | currency: 'TND' }}</span>
+      </div>
+
+
+      <!-- Action Buttons (Consulter Commande & Voir la Facture) -->
+      <div class="flex align-items-center">
+        <button pButton icon="pi pi-eye" class="p-button-primary p-button-rounded ml-2" style="font-size: 1.2rem; padding: 0.75rem 1.5rem; border-radius: 1.5rem; 
+                  background: linear-gradient(135deg, #00d2ff, #3a7bd5); 
+                  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+                  transition: all 0.3s ease; border: none;" pTooltip="Consulter les détails de la commande"
+          tooltipPosition="top" (click)="consulterCommande(commande.commandeId)">
+        </button>
+
+        <button pButton icon="pi pi-file" class="p-button-success p-button-rounded ml-2" style="font-size: 1.2rem; padding: 0.75rem 1.5rem; border-radius: 1.5rem; 
+                      background: linear-gradient(135deg, #ff6a00, #ee0979); 
+                      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+                      transition: all 0.3s ease; border: none;" pTooltip="Voir la facture de cette commande"
+          tooltipPosition="top">
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Expandable Product Details -->
+    <div *ngIf="isExpanded(commande.commandeId)" class="col-12">
+      <div *ngFor="let detail of commande.detailsCommande"
+        class="p-2 my-4 flex flex-column lg:flex-row justify-content-between align-items-center">
+        <div class="flex flex-column lg:flex-row justify-content-center align-items-center px-2">
+          <img alt="produit" class="w-8rem h-8rem mr-3 flex-shrink-0" [src]="detail.produitImageUrl" />
+          <div class="flex flex-column my-auto text-center md:text-left">
+            <span class="text-900 font-medium mb-3 mt-3 lg:mt-0">{{ detail.produitLibelle }}</span>
+            <span class="text-700 text-sm mb-3">Quantité: {{ detail.quantite }}</span>
+            <span class="text-700 text-sm mb-3">Prix unitaire: {{ detail.prixUni | currency: 'TND' }}</span>
+          </div>
+        </div>
+        <div *ngIf="commande.statutCommande === 'START'" class="mr-0 lg:mr-3 mt-4 lg:mt-0 p-2 flex align-items-center"
+          style="background-color: rgba(255, 165, 0, 0.1); border-radius: 2.5rem;">
+          <span class="bg-orange-500 text-white flex align-items-center justify-content-center border-circle mr-2"
+            style="min-width: 2rem; min-height: 2rem;">
+            <i class="pi pi-play"></i>
+          </span>
+          <span class="text-orange-500">Commande en début</span>
+        </div>
+
+        <div *ngIf="commande.statutCommande === 'IN_PROGRESS'"
+          class="mr-0 lg:mr-3 mt-4 lg:mt-0 p-2 flex align-items-center"
+          style="background-color: rgba(33, 150, 243, 0.1); border-radius: 2.5rem;">
+          <span class="bg-blue-500 text-white flex align-items-center justify-content-center border-circle mr-2"
+            style="min-width: 2rem; min-height: 2rem;">
+            <i class="pi pi-spinner pi-spin"></i>
+          </span>
+          <span class="text-blue-500">En cours</span>
+        </div>
+
+        <div *ngIf="commande.statutCommande === 'VALIDATED'"
+          class="mr-0 lg:mr-3 mt-4 lg:mt-0 p-2 flex align-items-center"
+          style="background-color: rgba(76, 175, 80, 0.1); border-radius: 2.5rem;">
+          <span class="bg-green-500 text-white flex align-items-center justify-content-center border-circle mr-2"
+            style="min-width: 2rem; min-height: 2rem;">
+            <i class="pi pi-check"></i>
+          </span>
+          <span class="text-green-500">Commande validée</span>
+        </div>
+
+        <div *ngIf="commande.statutCommande === 'COMPLETED'"
+          class="mr-0 lg:mr-3 mt-4 lg:mt-0 p-2 flex align-items-center"
+          style="background-color: rgba(0, 128, 0, 0.1); border-radius: 2.5rem;">
+          <span class="bg-green-700 text-white flex align-items-center justify-content-center border-circle mr-2"
+            style="min-width: 2rem; min-height: 2rem;">
+            <i class="pi pi-thumbs-up"></i>
+          </span>
+          <span class="text-green-700">Commande terminée</span>
+        </div>
+
+        <div *ngIf="commande.statutCommande === 'CANCELLED'"
+          class="mr-0 lg:mr-3 mt-4 lg:mt-0 p-2 flex align-items-center"
+          style="background-color: rgba(255, 0, 0, 0.1); border-radius: 2.5rem;">
+          <span class="bg-red-500 text-white flex align-items-center justify-content-center border-circle mr-2"
+            style="min-width: 2rem; min-height: 2rem;">
+            <i class="pi pi-times"></i>
+          </span>
+          <span class="text-red-500">Commande annulée</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Footer Links -->
+    <div class="col-12 p-0 flex border-top-1 surface-border futuristic-footer">
+      <!-- Cancel Order Button (Always clickable) -->
+      <a tabindex="0" class="futuristic-button cancel-order"
+        [ngClass]="{'disabled': commande.statutCommande === 'CANCELLED' }"
+        (click)="commande.statutCommande !== 'CANCELLED' && annulerCommande(commande.commandeId)"
+        pTooltip="Annuler la commande" tooltipPosition="bottom">
+        <i class="pi pi-times futuristic-icon"></i>
+        <span></span>
+      </a>
+    
+      <!-- Process Order Button (Grayed out when statutCommande is IN_PROGRESS, VALIDATED, or CANCELLED) -->
+      <a tabindex="0" class="futuristic-button process-order"
+        [ngClass]="{'disabled': commande.statutCommande === 'IN_PROGRESS' || commande.statutCommande === 'VALIDATED' || commande.statutCommande === 'CANCELLED'}"
+        (click)="commande.statutCommande !== 'IN_PROGRESS' && commande.statutCommande !== 'VALIDATED' && commande.statutCommande !== 'CANCELLED' && traiterCommande(commande.commandeId)"
+        pTooltip="Traiter la commande" tooltipPosition="bottom">
+        <i class="pi pi-cog futuristic-icon"></i>
+        <span></span>
+      </a>
+    
+      <!-- Validate Order Button (Grayed out when statutCommande is not IN_PROGRESS or when statutCommande is CANCELLED) -->
+      <a tabindex="0" class="futuristic-button validate-order"
+        [ngClass]="{'disabled': commande.statutCommande !== 'IN_PROGRESS' }"
+        (click)="commande.statutCommande === 'IN_PROGRESS'  && validerCommande(commande.commandeId)"
+        pTooltip="Valider la commande" tooltipPosition="bottom">
+        <i class="pi pi-check futuristic-icon"></i>
+        <span></span>
+      </a>
+    </div>
+  </div>
+
+  <p-paginator [rows]="rows" [totalRecords]="totalRecords" (onPageChange)="loadCommandes($event)"></p-paginator>
+</div>

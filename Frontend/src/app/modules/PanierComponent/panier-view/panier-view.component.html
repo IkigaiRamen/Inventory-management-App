@@ -1,0 +1,142 @@
+<p-toast></p-toast>
+<div class="card">
+  <div class="flex flex-column align-items-center mb-6">
+    <div class="text-900 text-4xl mb-4 font-medium">
+      Votre total de panier est de {{ calculateSubtotal() }} TND
+    </div>
+  </div>
+  <div class="mb-3 flex align-items-center justify-content-between">
+    <span class="font-bold text-900">Choisir un type de commande</span>
+  </div>
+  <div class="grid grid-nogutter align-items-center mb-5">
+    <div
+      class="col h-3rem border-1 border-300 text-900 inline-flex justify-content-center align-items-center flex-shrink-0 border-round mr-3 cursor-pointer hover:surface-100 transition-duration-150 transition-colors"
+      [ngClass]="{
+        'selected-purchase': selectedTypeCommande === TypeCommande.PURCHASE
+      }"
+      (click)="selectOrderType(TypeCommande.PURCHASE)"
+    >
+      Achat
+    </div>
+    <div
+      class="col h-3rem border-1 border-300 text-900 inline-flex justify-content-center align-items-center flex-shrink-0 border-round mr-3 cursor-pointer hover:surface-100 transition-duration-150 transition-colors"
+      [ngClass]="{
+        'selected-sale': selectedTypeCommande === TypeCommande.SALE
+      }"
+      (click)="selectOrderType(TypeCommande.SALE)"
+    >
+      Vente
+    </div>
+    <div
+      class="col h-3rem border-1 border-300 text-900 inline-flex justify-content-center align-items-center flex-shrink-0 border-round mr-3 cursor-pointer hover:surface-100 transition-duration-150 transition-colors"
+      [ngClass]="{
+        'selected-rental': selectedTypeCommande === TypeCommande.RENTAL
+      }"
+      (click)="selectOrderType(TypeCommande.RENTAL)"
+    >
+      Location
+    </div>
+  </div>
+
+  <ul class="list-none p-0 m-0">
+    <li
+      *ngFor="let product of cart"
+      class="flex flex-column md:flex-row py-6 border-top-1 border-bottom-1 surface-border md:align-items-center"
+    >
+      <img
+        [src]="product.imageurl"
+        class="w-12rem flex-shrink-0 mx-auto md:mx-0"
+        alt="{{ product.libelle }}"
+      />
+      <div class="flex-auto py-5 md:pl-5">
+        <div
+          class="flex flex-wrap align-items-start sm:align-items-center sm:flex-row sm:justify-content-between surface-border pb-6"
+        >
+          <div class="w-full sm:w-6 flex flex-column">
+            <span class="text-900 text-xl font-medium mb-3">{{ product.libelle }}</span>
+            <span class="text-700">
+              Quantité disponible: {{ product.quantiteDisponible }}
+            </span>
+          </div>
+          <div class="w-full sm:w-6 flex align-items-start justify-content-between mt-3 sm:mt-0">
+            <div>
+              <p-inputNumber
+                [(ngModel)]="selectedQuantity[product.id]"
+                [showButtons]="true"
+                buttonLayout="vertical"
+                spinnerMode="vertical"
+                inputId="vertical"
+                decrementButtonClass="p-button-secondary"
+                incrementButtonClass="p-button-secondary"
+                incrementButtonIcon="pi pi-plus"
+                decrementButtonIcon="pi pi-minus"
+                [max]="product.quantiteDisponible"
+                [min]="1"
+                placeholder="1"
+                (onInput)="validateQuantity(product)"
+              />
+              <div
+                *ngIf="selectedQuantity[product.id] > product.quantiteDisponible"
+                class="text-danger mt-2"
+              >
+                Vous ne pouvez pas ajouter plus de {{ product.quantiteDisponible }} unités.
+              </div>
+            </div>
+            <div class="flex flex-column sm:align-items-end">
+              <span class="text-900 text-xl font-medium mb-2 sm:mb-3">
+                {{
+                  selectedTypeCommande === TypeCommande.RENTAL
+                    ? (product.prixLoc * (selectedQuantity[product.id] || 1)).toFixed(2)
+                    : (product.prix * (selectedQuantity[product.id] || 1)).toFixed(2)
+                }}
+                TND
+              </span>
+              <a
+                (click)="removeFromCart(product.id)"
+                tabindex="0"
+                class="text-pink-500 font-medium text-sm"
+                role="button"
+              >
+                Retirer
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-column">
+          <span class="inline-flex align-items-center mb-3">
+            <i class="pi pi-envelope text-700 mr-2"></i>
+            <span class="text-700 mr-2">Commander aujourd'hui.</span>
+          </span>
+          <span class="inline-flex align-items-center mb-3">
+            <i class="pi pi-send text-700 mr-2"></i>
+            <span class="text-700 mr-2">Livraison d'ici <span class="font-bold">23 déc.</span></span>
+          </span>
+          <span class="flex align-items-center">
+            <i class="pi pi-exclamation-triangle text-700 mr-2"></i>
+            <span class="text-700">Seulement {{ product.quantiteDisponible }} disponibles.</span>
+          </span>
+        </div>
+      </div>
+    </li>
+  </ul>
+
+  <div class="flex">
+    <div class="w-12rem hidden md:block"></div>
+    <ul class="list-none py-0 pr-0 pl-0 md:pl-5 mt-6 mx-0 mb-0 flex-auto">
+      <li class="flex justify-content-between mb-4">
+        <span class="text-xl text-900 font-semibold">Sous-total</span>
+        <span class="text-xl text-900">{{ calculateSubtotal() }} TND</span>
+      </li>
+      <li class="flex justify-content-end">
+        <button
+          pButton
+          pRipple
+          (click)="proceedToCheckout()"
+          class="p-button-rounded p-button-info"
+        >
+          <span class="p-button-label">Passer à la caisse</span>
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>

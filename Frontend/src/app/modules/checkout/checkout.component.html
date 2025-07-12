@@ -1,0 +1,235 @@
+<p-toast></p-toast>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+<div class="card">
+  <div class="block-header"><h3>Détails de votre commande</h3></div>
+  <div class="block-content">
+    <div class="lg:px-8 md:px-6 px-4 py-8 surface-section ng-star-inserted">
+      <div class="surface-section">
+        <div class="font-medium text-3xl text-900 mb-3 flex items-center">
+          Commande de type {{ selectedSens }} /
+          <ng-container [ngSwitch]="selectedTypeCommande">
+            <div *ngSwitchCase="'SALE'">Vente</div>
+            <div *ngSwitchCase="'RENTAL'">Location</div>
+            <div *ngSwitchCase="'PURCHASE'">Achat</div>
+            <div *ngSwitchDefault>{{ selectedTypeCommande }}</div>
+          </ng-container>
+        </div>
+
+        <!-- Product List -->
+        <ul class="list-none p-0 m-0">
+          <li
+            class="flex flex-column md:flex-row py-6 border-top-1 border-bottom-1 surface-border md:align-items-center"
+            *ngFor="let detail of detailsCommande"
+          >
+            <!-- Product Image and Name -->
+            <div
+              *ngIf="produitDetails[detail.produitId]"
+              class="flex-shrink-0 text-center"
+            >
+              <img
+                [src]="produitDetails[detail.produitId].imageurl"
+                alt="Product Image"
+                class="w-12rem flex-shrink-0 mx-auto md:mx-0"
+              />
+            </div>
+
+            <div class="flex-auto py-5 md:pl-5">
+              <div
+                class="flex flex-wrap align-items-start sm:align-items-center sm:flex-row sm:justify-content-between surface-border pb-6"
+              >
+                <div class="w-full sm:w-6 flex flex-column">
+                  <span class="text-900 text-xl font-medium mb-3">{{
+                    produitDetails[detail.produitId].libelle
+                  }}</span>
+                  <span class="text-700">Quantité : {{ detail.quantite }}</span>
+                  <span class="text-700">
+                    Prix Unitaire :
+                    {{ selectedTypeCommande === 'RENTAL' ? detail.prixLoc : detail.prixUnitaire }} TND
+                  </span>
+                </div>
+                <div
+                  class="w-full sm:w-6 flex align-items-start justify-content-between mt-3 sm:mt-0"
+                >
+                <div class="flex flex-column sm:align-items-end">
+                  <span class="text-900 text-xl font-medium mb-2 sm:mb-3">
+                    {{
+                      selectedTypeCommande === 'RENTAL'
+                        ? calculateRentalPrice(detail.prixLoc, detail.quantite)
+                        : (detail.quantite * detail.prixUnitaire).toFixed(2)
+                    }}
+                    TND
+                  </span>
+                </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+
+       <!-- Devis Toggle Switch (only for SALE and RENTAL) -->
+<div *ngIf="selectedTypeCommande === 'SALE' || selectedTypeCommande === 'RENTAL'" class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+  <div class="flex justify-content-between w-full">
+    <div class="text-500 w-6 md:w-2 font-medium">
+      <h6>Générer un devis</h6>
+    </div>
+    <div class="w-6 md:w-2 flex justify-content-end">
+      <p-inputSwitch [(ngModel)]="generateDevis"></p-inputSwitch>
+    </div>
+  </div>
+</div>
+
+<!-- Show Date Picker when 'Generate Devis' is toggled on -->
+<div *ngIf="generateDevis && (selectedTypeCommande === 'SALE' || selectedTypeCommande === 'RENTAL')">
+  <ul class="list-none p-0 m-0">
+    <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+      <label for="expirationDate" class="w-6 md:w-2 font-medium">Date d'expiration Devis</label>
+      <div class="w-6 md:w-10">
+        <p-calendar [(ngModel)]="devisExpirationDate" [showIcon]="true" [showOnFocus]="false" inputId="devisExpirationDate" (ngModelChange)="onDateChange()"></p-calendar>
+      </div>
+    </li>
+  </ul>
+</div>
+
+
+        <!-- Client or Supplier Selection (for SALE, RENTAL, PURCHASE) -->
+        <div *ngIf="selectedTypeCommande === 'SALE' || selectedTypeCommande === 'RENTAL'">
+          <ul class="list-none p-0 m-0">
+            <li
+              class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap"
+            >
+              <div class="flex justify-content-between w-full">
+                <div class="text-500 w-6 md:w-2 font-medium">
+                  <h6>Veuillez choisir un client</h6>
+                </div>
+                <div class="w-6 md:w-2 flex justify-content-end">
+                  <p-listbox
+                    [options]="clients"
+                    [(ngModel)]="selectedClient"
+                    [style]="{ width: '15rem' }" 
+                    [listStyle]="{'max-height': '220px'}" 
+                    (onChange)="onPersonneSelected($event, true)"
+                    [filter]="true"
+                  >
+                    <ng-template let-client pTemplate="item">
+                      {{ client.prenom }} {{ client.nom }}  <!-- Concatenate prenom and nom -->
+                    </ng-template>
+                  </p-listbox>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Supplier Selection (for PURCHASE) -->
+        <div *ngIf="selectedTypeCommande === 'PURCHASE'">
+          <ul class="list-none p-0 m-0">
+            <li
+              class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap"
+            >
+              <div class="flex justify-content-between w-full">
+                <div class="text-500 w-6 md:w-2 font-medium">
+                  Veuillez choisir un fournisseur
+                </div>
+                <div class="w-6 md:w-2 flex justify-content-end">
+                  <p-listbox
+                    [options]="fournisseurs"
+                    [(ngModel)]="selectedFournisseur"
+                    optionLabel="societe"
+                    [style]="{ width: '15rem' }" 
+                    (onChange)="onPersonneSelected($event, false)"
+                    [listStyle]="{'max-height': '220px'}" 
+                    [filter]="true"
+                  >
+                  </p-listbox>
+                </div>
+              </div>
+            </li>
+            <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+              <label class="w-6 md:w-2 font-medium">Statut de Paiement</label>
+              <div class="w-6 md:w-10">
+                <p-dropdown
+                  [options]="statutPaiementOptions"
+                  [(ngModel)]="selectedStatutPaiement"
+                  placeholder="Sélectionnez le statut de paiement"
+                ></p-dropdown>
+              </div>
+            </li>
+        
+            <!-- Dropdown for Mode de Paiement -->
+            <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+              <label class="w-6 md:w-2 font-medium">Mode de Paiement</label>
+              <div class="w-6 md:w-10">
+                <p-dropdown
+                  [options]="modePaiementOptions"
+                  [(ngModel)]="selectedModePaiement"
+                  placeholder="Sélectionnez le mode de paiement"
+                ></p-dropdown>
+              </div>
+            </li>
+
+            <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap">
+              <label for="expirationDate" class="w-6 md:w-2 font-medium">Date d'echeance</label>
+              <div class="w-6 md:w-10">
+                <p-calendar [(ngModel)]="dateEcheanceFacture" [showIcon]="true" [showOnFocus]="false" inputId="dateEcheanceFacture"></p-calendar>              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Location Dates (if applicable) -->
+        <div *ngIf="selectedTypeCommande === 'RENTAL'">
+          <h4>Dates de Location</h4>
+          <ul class="list-none p-0 m-0">
+            <li
+              class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap"
+            >
+              <label for="dateDebut" class="w-6 md:w-2 font-medium">Date de Début</label>
+              <div class="w-6 md:w-10">
+                <p-calendar
+                  [(ngModel)]="dateDebutCommande"
+                  [showIcon]="true"
+                  [showOnFocus]="false"
+                  inputId="buttondisplay"
+                  (ngModelChange)="onDateChange()"
+                />
+              </div>
+            </li>
+            <li
+              class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap"
+            >
+              <label for="dateFin" class="w-6 md:w-2 font-medium">Date de Fin</label>
+              <div class="w-6 md:w-10">
+                <p-calendar
+                  [(ngModel)]="dateFinCommande"
+                  [showIcon]="true"
+                  [showOnFocus]="false"
+                  inputId="buttondisplay"
+                  (ngModelChange)="onDateChange()"
+                />
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="flex">
+          <div class="w-12rem hidden md:block"></div>
+          <ul class="list-none py-0 pr-0 pl-0 md:pl-5 mt-6 mx-0 mb-0 flex-auto">
+            <li class="flex justify-content-end mb-4">
+              <span class="text-xl text-900 font-semibold">Sous-total</span>
+              <span class="text-xl text-900 ml-4">{{ totalPrix.toFixed(2) }} TND</span>
+            </li>
+            <li class="flex justify-content-end">
+              <button
+                pButton
+                pRipple
+                (click)="placeOrder()"
+                class="p-button-rounded p-button-info"
+              >
+                <span class="p-button-label">Commencer la commande</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

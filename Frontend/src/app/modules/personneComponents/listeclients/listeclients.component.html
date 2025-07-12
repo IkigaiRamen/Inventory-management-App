@@ -1,0 +1,211 @@
+<p-toast></p-toast>
+<p-confirmDialog
+  header="Confirmation"
+  icon="pi pi-exclamation-triangle"
+></p-confirmDialog>
+
+<div class="card">
+  <h5>Liste des Clients</h5>
+  <p-table
+    #dt1
+    [value]="clients"
+    dataKey="id"
+    [rows]="10"
+    [loading]="loading"
+    [rowHover]="true"
+    styleClass="p-datatable-gridlines"
+    [paginator]="true"
+    [globalFilterFields]="['nom', 'prenom', 'numero', 'numeroCin']"
+    responsiveLayout="scroll"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Numero</th>
+        <th>Numero CIN</th>
+        <th>Image</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-client>
+      <tr>
+        <td>{{ client.nom }}</td>
+        <td>{{ client.prenom }}</td>
+        <td>{{ client.numero }}</td>
+        <td>{{ client.numeroCin }}</td>
+        <td>
+          <div class="flex justify-content-between">
+            <img
+              [src]="client.cinRecto"
+              alt="Client Cin Recto"
+              width="50"
+              height="50"
+            />
+            <img
+              [src]="client.cinVerso"
+              alt="Client Cin Verso"
+              width="50"
+              height="50"
+            />
+          </div>
+        </td>
+        <td>
+          <button
+            pButton
+            icon="pi pi-pencil"
+            (click)="editClient(client)"
+            class="p-button-outlined"
+            aria-label="Edit Client"
+          ></button>
+          <button
+            pButton
+            icon="pi pi-trash"
+            (click)="confirmDeleteClient(client.id)"
+            class="p-button-outlined p-button-danger"
+            aria-label="Delete Client"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- Edit Client Dialog -->
+  <p-dialog
+    [(visible)]="displayEditClientModal"
+    [style]="{ width: '450px' }"
+    header="Modifier un client"
+    [modal]="true"
+    class="p-fluid"
+  >
+    <ng-template pTemplate="content">
+      <div class="field">
+        <label for="clientNom">Nom</label>
+        <input
+          id="clientNom"
+          type="text"
+          pInputText
+          [(ngModel)]="currentClientAffichage!.nom"
+          required
+          autofocus
+          [ngClass]="{
+            'ng-invalid ng-dirty': submitted && !currentClientAffichage!.nom
+          }"
+        />
+        <small *ngIf="submitted && !currentClientAffichage!.nom" class="ng-dirty ng-invalid">
+            Nom est requis.
+        </small>
+      </div>
+
+      <div class="field">
+        <label for="clientPrenom">Prénom</label>
+        <input
+          id="clientPrenom"
+          type="text"
+          pInputText
+          [(ngModel)]="currentClientAffichage!.prenom"
+          required
+          [ngClass]="{
+            'ng-invalid ng-dirty': submitted && !currentClientAffichage!.prenom
+          }"
+        />
+        <small *ngIf="submitted && !currentClientAffichage!.prenom" class="ng-dirty ng-invalid">
+            Prénom est requis.
+        </small>
+      </div>
+
+      <div class="field">
+        <label for="clientNumero">Numero</label>
+        <input
+          id="clientNumero"
+          type="text"
+          pInputText
+          [(ngModel)]="currentClientAffichage!.numero"
+          required
+          (input)="validateNumero($event)"
+          [ngClass]="{
+            'ng-invalid ng-dirty': submitted && !currentClientAffichage!.numero
+          }"
+        />
+        <small *ngIf="submitted && !currentClientAffichage!.numero" class="ng-dirty ng-invalid">
+            Numero est requis.
+        </small>
+        <small *ngIf="submitted && isInvalidNumero" class="p-error">Le numéro doit être un nombre valide.</small>
+      </div>
+
+      <div class="field">
+        <label for="clientNumeroCin">Numero CIN</label>
+        <input
+          id="clientNumeroCin"
+          type="text"
+          pInputText
+          [(ngModel)]="currentClientAffichage!.numeroCin"
+          required
+          (input)="validateNumeroCin($event)"
+          [ngClass]="{
+            'ng-invalid ng-dirty': submitted && !currentClientAffichage!.numeroCin
+          }"
+        />
+        <small *ngIf="submitted && !currentClientAffichage!.numeroCin" class="ng-dirty ng-invalid">
+            Numero CIN est requis.
+        </small>
+        <small *ngIf="submitted && isInvalidNumeroCin" class="p-error">Le numéro doit être un nombre valide.</small>
+      </div>
+
+      <!-- CIN Recto Image Upload -->
+      <div class="field">
+        <label for="clientCinRecto">CIN Recto</label>
+        <input
+          id="clientCinRecto"
+          type="file"
+          (change)="onCinRectoFileSelected($event)"
+          accept="image/*"
+        />
+        <img
+          *ngIf="currentClientAffichage?.cinRecto"
+          [src]="currentClientAffichage?.cinRecto"
+          alt="CIN Recto"
+          width="50"
+          height="50"
+        />
+      </div>
+
+      <!-- CIN Verso Image Upload -->
+      <div class="field">
+        <label for="clientCinVerso">CIN Verso</label>
+        <input
+          id="clientCinVerso"
+          type="file"
+          (change)="onCinVersoFileSelected($event)"
+          accept="image/*"
+        />
+        <img
+          *ngIf="currentClientAffichage?.cinVerso"
+          [src]="currentClientAffichage?.cinVerso"
+          alt="CIN Verso"
+          width="50"
+          height="50"
+        />
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        pRipple
+        label="Annuler"
+        icon="pi pi-times"
+        class="p-button-danger"
+        (click)="closeEditClientModal()"
+      ></button>
+      <button
+        pButton
+        pRipple
+        label="Modifier"
+        icon="pi pi-check"
+        class="p-button-success"
+        (click)="saveClient()"
+      ></button>
+    </ng-template>
+  </p-dialog>
+</div>

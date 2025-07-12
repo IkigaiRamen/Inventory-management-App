@@ -1,0 +1,137 @@
+
+
+<div class="card mt-4">
+  <h5>Liste des Fournisseurs</h5>
+  <p-table
+    #dt2
+    [value]="fournisseurs"
+    dataKey="id"
+    [rows]="10"
+    [loading]="loading"
+    [rowHover]="true"
+    styleClass="p-datatable-gridlines"
+    [paginator]="true"
+    [globalFilterFields]="['nom', 'prenom', 'societe', 'numeroCin']"
+    responsiveLayout="scroll"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Société</th>
+        <th>Numero</th>
+        <th>Actions</th>
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-fournisseur>
+      <tr>
+        <td>{{ fournisseur.nom }}</td>
+        <td>{{ fournisseur.prenom }}</td>
+        <td>{{ fournisseur.societe }}</td>
+        <td>{{fournisseur.numero}}</td>
+        <td>
+          <button
+            pButton
+            icon="pi pi-pencil"
+            (click)="editFournisseur(fournisseur)"
+            class="p-button-outlined"
+            aria-label="Edit Supplier"
+          ></button>
+          <button
+            pButton
+            icon="pi pi-trash"
+            (click)="confirmDeleteFournisseur(fournisseur.id)"
+            class="p-button-outlined p-button-danger"
+            aria-label="Delete Supplier"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <p-dialog
+    [(visible)]="displayFournisseurModal"
+    [style]="{ width: '400px' }"
+    header="Modifier un fournisseur"
+    [modal]="true"
+    class="p-fluid"
+  >
+    <ng-template pTemplate="content">
+      <div class="field">
+        <label for="fournisseurNom">Nom</label>
+        <input
+          id="fournisseurNom"
+          type="text"
+          pInputText
+          [(ngModel)]="currentFournisseurAffichage!.nom"
+          required
+          [ngClass]="{
+            'ng-invalid ng-dirty': submitted && !currentFournisseurAffichage!.nom
+          }"
+        />
+        <small *ngIf="submitted && !currentFournisseurAffichage!.nom" class="ng-dirty ng-invalid">
+          Nom est requis.
+      </small>
+      </div>
+      <div class="field">
+        <label for="fournisseurPrenom">Prénom</label>
+        <input
+          id="fournisseurPrenom"
+          type="text"
+          pInputText
+          [(ngModel)]="currentFournisseurAffichage!.prenom"
+          required
+          [ngClass]="{
+            'ng-invalid ng-dirty': submitted && !currentFournisseurAffichage!.prenom
+          }"
+        />
+        <small *ngIf="submitted && !currentFournisseurAffichage!.prenom" class="ng-dirty ng-invalid">
+          Prénom est requis.
+      </small>
+      </div>
+      <div class="field">
+        <label htmlFor="numero">Numero</label>
+            <input
+              pInputText
+              id="numeroFournisseur"
+              [(ngModel)]="currentFournisseurAffichage!.numero"
+              type="text"
+              required
+              (input)="validateNumero($event)"
+              [ngClass]="{
+                'ng-invalid ng-dirty': submitted
+              }"
+            />
+            <small *ngIf="submitted && !currentFournisseurAffichage!.numero" class="p-error">Le numéro est requis.</small>
+            <small *ngIf="submitted && isInvalidNumero" class="p-error">Le numéro doit être un nombre valide.</small>
+      </div>
+      <div class="field">
+        <label for="fournisseurSociete">Société</label>
+        <input id="fournisseurSociete" 
+          type="text" 
+          pInputText 
+          [(ngModel)]="currentFournisseurAffichage!.societe" 
+          required 
+          [ngClass]="{
+            'ng-invalid ng-dirty': submitted && currentFournisseurAffichage!.societe
+          }"
+        />
+        <small *ngIf="submitted && !currentFournisseurAffichage!.societe" class="p-error">La Société est requis.</small>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        label="Annuler"
+        icon="pi pi-times"
+        (click)="closeFournisseurModal()"
+      ></button>
+      <button
+        pButton
+        label="Modifier"
+        icon="pi pi-check"
+        (click)="saveFournisseur()"
+      ></button>
+    </ng-template>
+  </p-dialog>
+</div>

@@ -1,0 +1,25 @@
+// Define variables for consistency
+$body-bg-color: #fff;
+$padding: 3rem;
+$margin-left-default: 5rem;
+$margin-left-trimmed: 16.5625rem;
+
+// Main body styles
+.body {
+  margin-left: $margin-left-default;
+  z-index: 0;
+  position: relative;
+  top: 0;
+  transition: all 0.5s ease;
+  background: $body-bg-color;
+  padding: $padding;
+
+  &.body-trimmed {
+    margin-left: $margin-left-trimmed;
+  }
+
+  &.body-md-screen {
+    width: calc(100% - $margin-left-default);
+    margin-left: $margin-left-default;
+  }
+}

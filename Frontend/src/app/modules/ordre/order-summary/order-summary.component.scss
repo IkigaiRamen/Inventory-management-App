@@ -1,0 +1,195 @@
+.order-details-card {
+  background-color: var(--surface-card);
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+}
+
+.header-left h2 {
+  font-size: 1.5rem;
+
+}
+
+.header-right {
+  display: flex;
+  gap: 20px;
+}
+.order-info{
+    display: flex;
+    gap: 40px; 
+}
+.info-block {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.price-info.info-block1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+.label {
+
+  font-size: 1rem;
+}
+
+.value {
+ 
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.progress-section {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.progress-section h3 {
+  font-size: 1.25rem;
+
+  margin-bottom: 10px;
+}
+
+.status-bar {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.active-status {
+  color: #007ad9;
+}
+
+.products-section {
+  margin: 20px 0;
+}
+
+.products-section h3 {
+  font-size: 1.25rem;
+
+  margin-bottom: 10px;
+}
+
+.product-list {
+  list-style: none;
+  padding: 0;
+}
+
+.product-item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
+
+.product-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 20px;
+}
+
+.product-details {
+  flex: 1;
+}
+
+.product-name {
+  font-size: 1.1rem;
+  font-weight: bold;
+
+}
+
+.product-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+}
+
+
+
+.summary-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.price-info, .payment-info {
+  margin-bottom: 15px;
+}
+
+.info-block {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.1rem;
+}
+
+.payment-info .label {
+  font-size: 1.25rem;
+
+  margin-bottom: 5px;
+}
+
+.payment-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.payment-method {
+    font-size: 0.9rem;
+}
+
+.payment-amount {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.p-button-success, .p-button-info {
+  font-size: 0.9rem;
+  padding: 10px 20px;
+}
+::ng-deep .progress-bar-start .ui-progressbar-value {
+    background-color: #f0ad4e !important; // Orange color for START
+  }
+  
+  ::ng-deep .progress-bar-in-progress .ui-progressbar-value {
+    background-color: #5bc0de !important; // Light blue color for IN_PROGRESS
+  }
+  
+  ::ng-deep .progress-bar-validated .ui-progressbar-value {
+    background-color: #5cb85c !important; // Green color for VALIDATED
+  }
+  
+  ::ng-deep .progress-bar-completed .ui-progressbar-value {
+    background-color: #0275d8 !important; // Blue color for COMPLETED
+  }
+  
+  .status-bar span {
+    margin-right: 10px;
+  }
+  
+  .active-status {
+    font-weight: bold;
+    color: #0275d8; // Change color to highlight active status
+  }
+  

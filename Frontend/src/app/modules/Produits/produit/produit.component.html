@@ -1,0 +1,285 @@
+<!-- Toast for displaying success messages -->
+<p-toast></p-toast>
+
+<p-confirmDialog
+  header="Confirmation"
+  icon="pi pi-exclamation-triangle"
+></p-confirmDialog>
+
+<div class="grid">
+  <div class="col-12">
+    <div class="card px-6 py-6">
+      <p-toolbar styleClass="mb-4">
+        <ng-template pTemplate="left">
+          <div class="my-2">
+            <button
+              pButton
+              pRipple
+              label="Ajouter Produit"
+              icon="pi pi-plus"
+              class="p-button-success mr-2"
+              (click)="openAddProduitModal()"
+            ></button>
+            <button
+              pButton
+              pRipple
+              label="Supprimer"
+              icon="pi pi-trash"
+              class="p-button-danger"
+            ></button>
+          </div>
+        </ng-template>
+      </p-toolbar>
+      <h3>Tous les Produits</h3>
+      <p-table [value]="produits" dataKey="name" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+          <tr>
+            <th></th>
+            <th pSortableColumn="name">
+              Nom <p-sortIcon field="name"></p-sortIcon>
+            </th>
+            <th>Image</th>
+            <th pSortableColumn="description">
+              Description <p-sortIcon field="description"></p-sortIcon>
+            </th>
+            <th pSortableColumn="prix">
+              Prix <p-sortIcon field="prix"></p-sortIcon>
+            </th>
+            <th pSortableColumn="prixLoc">
+              Prix Location <p-sortIcon field="prixLoc"></p-sortIcon>
+            </th>
+            <th pSortableColumn="quantiteDisponible">
+              Quantité Disponible
+              <p-sortIcon field="quantiteDisponible"></p-sortIcon>
+            </th>
+            <th pSortableColumn="quantiteTotale">
+              Quantité Totale <p-sortIcon field="quantiteTotale"></p-sortIcon>
+            </th>
+            <th pSortableColumn="categorie">
+              Catégorie <p-sortIcon field="categorie"></p-sortIcon>
+            </th>
+            <th style="text-align: center" colspan="2">Action</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-produit>
+          <tr>
+            <td></td>
+            <td>{{ produit.libelle }}</td>
+            <td>
+              <img [src]="produit.imageurl" width="100" class="shadow-4" />
+            </td>
+            <td>{{ produit.description }}</td>
+            <td>{{ produit.prix }} TND</td>
+            <td>{{ produit.prixLoc }} TND</td>
+            <td>{{ produit.quantiteDisponible }}</td>
+            <td>{{ produit.quantiteTotale }}</td>
+            <td>{{ produit.categorieLibelle }}</td>
+            <td>
+              <div class="flex">
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-rounded p-button-primary mr-2"
+                  icon="pi pi-pencil"
+                  (click)="confirmEdit(produit)"
+                ></button>
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-rounded p-button-danger"
+                  icon="pi pi-trash"
+                  (click)="confirmDelete(produit)"
+                ></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="10">Aucun produit trouvé.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+  <!-- Modal Dialog for Adding/Editing a Product -->
+  <p-dialog
+    [(visible)]="displayProduitsModal"
+    [style]="{ width: '450px' }"
+    header="{{
+      editing ? 'Modifier un produit' : 'Ajouter un nouveau produit'
+    }}"
+    [modal]="true"
+    class="p-fluid"
+  >
+    <ng-template pTemplate="content">
+      <button
+        pButton
+        label="Scan Barcode"
+        icon="pi pi-camera"
+        class="p-button-info mt-3 mb-3"
+        (click)="showScanner = !showScanner"
+      ></button>
+
+      <!-- Barcode Scanner (only visible when showScanner is true) -->
+      <div *ngIf="showScanner" class="scanner-container">
+        <zxing-scanner
+          [formats]=allowedFormats
+          (scanSuccess)="onScanSuccess($event)"
+          [start]="true"
+        ></zxing-scanner>
+      </div>
+      <div class="field">
+        <label for="libelle">Nom</label>
+        <input
+          id="libelle"
+          type="text"
+          pInputText
+          [(ngModel)]="currentProduitAffichage.libelle"
+          required
+          autofocus
+          [ngClass]="{
+            'ng-invalid ng-dirty': submitted && !currentProduitAffichage.libelle
+          }"
+        />
+        <small
+          *ngIf="submitted && !currentProduitAffichage.libelle"
+          class="ng-dirty ng-invalid"
+        >
+          Nom est requis.
+        </small>
+      </div>
+
+      <div class="field">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          pInputTextarea
+          [(ngModel)]="currentProduitAffichage.description"
+          rows="3"
+          required
+        ></textarea>
+      </div>
+
+      <div class="field">
+        <label for="prix">Prix</label>
+        <p-inputNumber
+          id="prix"
+          [(ngModel)]="currentProduitAffichage.prix"
+          [min]="0"
+          [ngClass]="{
+            'ng-invalid ng-dirty': submitted && !currentProduitAffichage.prix
+          }"
+        ></p-inputNumber>
+        <small
+          *ngIf="submitted && !currentProduitAffichage.prix"
+          class="ng-dirty ng-invalid"
+        >
+        Prix est requis.
+        </small>
+      </div>
+
+      <div class="field">
+        <label for="prixLoc">Prix de location</label>
+        <p-inputNumber
+          id="prixLoc"
+          [(ngModel)]="currentProduitAffichage.prixLoc"
+          [min]="0"
+          [ngClass]="{
+            'ng-invalid ng-dirty': submitted && !currentProduitAffichage.prixLoc
+          }"
+        ></p-inputNumber>
+        <small
+          *ngIf="submitted && !currentProduitAffichage.prixLoc"
+          class="ng-dirty ng-invalid"
+        >
+        Prix Location est requis.
+        </small>
+      </div>
+
+      <div class="field">
+        <label for="quantiteTotale">Quantité Totale</label>
+        <p-inputNumber
+          id="quantiteTotale"
+          [(ngModel)]="currentProduitAffichage.quantiteTotale"
+          [min]="0"
+          [ngClass]="{
+            'ng-invalid ng-dirty': submitted && !currentProduitAffichage.quantiteTotale
+          }"
+        ></p-inputNumber>
+        <small
+          *ngIf="submitted && !currentProduitAffichage.quantiteTotale"
+          class="ng-dirty ng-invalid"
+        >
+        Quantité Totale est requis.
+        </small>
+      </div>
+
+      <div class="field">
+        <label for="imageurl">Image du Produit</label>
+        <img
+          *ngIf="currentProduitAffichage.imageurl"
+          [src]="currentProduitAffichage.imageurl"
+          alt="Product Image"
+          style="max-width: 100%; max-height: 200px"
+        />
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+      </div>
+
+      <div class="field">
+        <label for="categorieId">Catégorie</label>
+        <p-dropdown
+          [options]="categoriesList"
+          [(ngModel)]="currentProduitAffichage.categorieId"
+          optionLabel="libelle"
+          optionValue="id"
+          placeholder="Sélectionner une categorie"
+          [ngClass]="{
+            'ng-invalid ng-dirty': submitted && !currentProduitAffichage.categorieId
+          }"
+        ></p-dropdown>
+        <small
+          *ngIf="submitted && !currentProduitAffichage.categorieId"
+          class="ng-dirty ng-invalid"
+        >
+        Catégorie est requis.
+        </small>
+      </div>
+      <div class="field">
+        <label for="barcode">Code a barre</label>
+        <input
+          id="barcode"
+          type="text"
+          pInputText
+          [(ngModel)]="currentProduitAffichage.barcode"
+          autofocus
+        />
+        
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        pRipple
+        label="Annuler"
+        icon="pi pi-times"
+        class="p-button-danger"
+        (click)="closeProduitsModal()"
+      ></button>
+      <button
+        pButton
+        pRipple
+        label="{{ editing ? 'Modifier' : 'Ajouter' }}"
+        icon="pi pi-check"
+        class="p-button-success"
+        (click)="submitProduit()"
+      ></button>
+    </ng-template>
+  </p-dialog>
+</div>
